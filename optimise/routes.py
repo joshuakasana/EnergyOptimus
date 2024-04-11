@@ -109,6 +109,7 @@ def get_current_data():
     })
 
 @app.route('/get_energy_consumption', methods=['GET'])
+@login_required
 def get_energy_consumption():
     # Get the current datetime
     current_datetime = datetime.now()
