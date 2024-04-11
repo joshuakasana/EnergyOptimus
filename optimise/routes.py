@@ -56,12 +56,18 @@ def base():
     return render_template('index.html')
 
 
+
 @app.route("/home", methods=['GET', 'POST'])
 @login_required
 def home():
     first_name = current_user.first_name
     budget = current_user.budget
+    stats = Stats.query.all()
+    
 
+    month_predict = 13000
+    currentMonth_expense = 7409.99
+    savings = budget - currentMonth_expense
     form = changeExpenseBudget()
     if form.validate_on_submit():
         current_user.budget = form.expense_budget.data
@@ -69,8 +75,18 @@ def home():
         flash(f'Expense Budget updated successfully!', 'success')
         return redirect(url_for('home'))
     return render_template('home.html', title='Action Center', form=form,
-                            first_name=first_name, budget=budget)
+                            first_name=first_name, budget=budget, month_predict=month_predict, 
+                            currentMonth_expense=currentMonth_expense, savings=savings)
 
+def average_energy_per_hour(target_date):
+    average_eph = db.session.query(
+        func.strftime('%Y-%m-%d %H:00:00', Stats.date).label('hour_truncated'),
+        func.avg(Stats.energy).label('average_energy')
+    ).filter(
+        func.date(Stats.date) == target_date
+    ).group_by(
+        func.strftime('%Y-%m-%d %H:00:00', Stats.date)
+    ).all()
 
 @app.route('/get_current_data', methods=['GET'])
 @login_required
