@@ -154,10 +154,10 @@ def get_energy_consumption():
 @login_required
 def get_energy_data():
     # Query the Stats table for energy and predicted energy data
-    stats = Stats.query.filter_by(user_id=current_user.id).order_by(Stats.date.desc()).limit(100).all()
+    stats = Stats.query.filter_by(user_id=current_user.id).order_by(Stats.date).all()
 
     # Extract timestamps and energy values
-    timestamps = [stat.date for stat in stats]
+    timestamps = [stat.date.strftime("%a %H:%M:%S") for stat in stats]
     energy_values = [stat.energy for stat in stats]
     predicted_energy_values = [stat.energy_prediction for stat in stats]
 

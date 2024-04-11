@@ -7,8 +7,12 @@
         <div class="col-lg-6 mx-auto">
             <p class="fs-5 mb-4">Keeping tabs with energy consumptions.</p>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">Login</button>
-                <button type="button" class="btn btn-outline-success btn-lg px-4">Sign up</button>
+                <button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">
+                    <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                </button>
+                <button type="button" class="btn btn-outline-success btn-lg px-4">
+                    <a class="nav-item nav-link" href="{{ url_for('register') }}">Sign up</a>
+                </button>
             </div>
         </div>
     </div>

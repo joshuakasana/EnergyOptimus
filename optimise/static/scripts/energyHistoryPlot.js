@@ -1,8 +1,13 @@
-// Function to fetch data from the server and update the plot
 function updatePlots() {
     fetch('/get_energy_data')
     .then(response => response.json())
     .then(data => {
+        // Check if data is empty
+        if (!data.timestamps || !data.energy_values || !data.predicted_energy_values) {
+            console.error('Data is empty.');
+            return;
+        }
+
         // Extract data
         let timestamps = data.timestamps;
         let energy_values = data.energy_values;
@@ -13,7 +18,7 @@ function updatePlots() {
             x: timestamps,
             y: energy_values,
             mode: 'lines+markers',
-            name: 'Energy'
+            name: 'Actual Energy'
         };
 
         let predicted_energy_trace = {
@@ -23,20 +28,23 @@ function updatePlots() {
             name: 'Predicted Energy'
         };
 
+        let layout = {
+            title: 'Energy Consumption vs Time',
+            xaxis: {
+                title: 'Time',
+                rangeslider: { visible: false },
+                range: [Math.max(0, timestamps.length - 19), Math.max(40, timestamps.length)]
+            },
+            yaxis: { title: 'Energy Consumption' },
+            showlegend: true
+        };
+
         // Update or create the plot
         if (window.energyPlot) {
             // Update existing plot
-            Plotly.restyle('energy-plot', energy_trace, 0);
-            Plotly.restyle('energy-plot', predicted_energy_trace, 1);
+            let data = [energy_trace, predicted_energy_trace];
+            Plotly.react('energy-trace', data, layout)
         } else {
-            // Create new plot
-            let layout = {
-                title: 'Energy Consumption vs Time',
-                xaxis: {title: 'Time'},
-                yaxis: {title: 'Energy Consumption'},
-                showlegend: true
-            };
-
             let data = [energy_trace, predicted_energy_trace];
             window.energyPlot = Plotly.newPlot('energy-plot', data, layout);
         }
