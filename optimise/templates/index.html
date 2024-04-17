@@ -2,17 +2,23 @@
 {% block content %}
 
 <!-- <div class="bg-light text-secondary px-4 py-5 text-center"> -->
-    <div class="py-5 text-secondary text-center">
+    <div class="py-5 text-secondary text-center" style="height: 100vh;">
         <h1 class="display-5 fw-bold text-success">Satient</h1>
         <div class="col-lg-6 mx-auto">
-            <p class="fs-5 mb-4">Keeping tabs with energy consumptions.</p>
+            <p class="fs-5 mb-4 text-white">Keeping tabs with energy consumptions.</p>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">
-                    <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                </button>
-                <button type="button" class="btn btn-outline-success btn-lg px-4">
-                    <a class="nav-item nav-link" href="{{ url_for('register') }}">Sign up</a>
-                </button>
+                {% if current_user.is_authenticated %}
+                    <button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">
+                        <a class="nav-item nav-link" href="{{ url_for('home') }}">Action Center</a>
+                    </button>
+                {% else %}
+                    <button type="button" class="btn btn-outline-info btn-lg px-4 me-sm-3 fw-bold">
+                        <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                    </button>
+                    <button type="button" class="btn btn-outline-success btn-lg px-4">
+                        <a class="nav-item nav-link" href="{{ url_for('register') }}">Sign up</a>
+                    </button>
+                {% endif %}
             </div>
         </div>
     </div>

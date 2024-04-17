@@ -147,40 +147,100 @@
                 <div class="col-6 col-md-4 col-lg-3 text-center">
                     <h5 class="mb-0">Smart Tv</h5>
                     <img class="img-circle" alt="" src="{{ url_for('static', filename='images/smartDevices/smart-tv.png') }}" style="width: 70px; height: 70px;">
+                    <br>
+                    <div class="slider mt-2">
+                        <input type="checkbox" id="smartTv-toggle" class="toggle">
+                        <label for="smartTv-toggle"></label>
+                    </div>
                     <p class="mb-0">4 kWh</p>
                     <p class="text-muted mt-0">Active for # hours</p>
                 </div>
                 <div class="col-6 col-md-4 col-lg-3 text-center">
                     <h5 class="mb-0">Fridge</h5>
                     <img class="img-circle" alt="" src="{{ url_for('static', filename='images/smartDevices/fridge.png') }}" style="width: 70px; height: 70px;">
+                    <br>
+                    <div class="slider mt-2">
+                        <input type="checkbox" id="fridge-toggle" class="toggle">
+                        <label for="fridge-toggle"></label>
+                    </div>
                     <p class="mb-0">4 kWh</p>
                     <p class="text-muted mt-0">Active for # hours</p>
                 </div>
                 <div class="col-6 col-md-4 col-lg-3 text-center">
                     <h5 class="mb-0">Washing machine</h5>
                     <img class="img-circle" alt="" src="{{ url_for('static', filename='images/smartDevices/laundry.png') }}" style="width: 70px; height: 70px;">
+                    <br>
+                    <div class="slider mt-2">
+                        <input type="checkbox" id="washing-machine-toggle" class="toggle">
+                        <label for="washing-machine-toggle"></label>
+                    </div>
                     <p class="mb-0">4 kWh</p>
                     <p class="text-muted mt-0">Active for # hours</p>
                 </div>
                 <div class="col-6 col-md-4 col-lg-3 text-center">
                     <h5 class="mb-0">Microwave</h5>
                     <img class="img-circle" alt="" src="{{ url_for('static', filename='images/smartDevices/microwave-oven.png') }}" style="width: 70px; height: 70px;">
+                    <br>
+                    <div class="slider mt-2">
+                        <input type="checkbox" id="microwave-toggle" class="toggle">
+                        <label for="microwave-toggle"></label>
+                    </div>
                     <p class="mb-0">4 kWh</p>
                     <p class="text-muted mt-0">Active for # hours</p>
                 </div>
                 <div class="col-6 col-md-4 col-lg-3 text-center">
                     <h5 class="mb-0">Lights</h5>
                     <img class="img-circle" alt="" src="{{ url_for('static', filename='images/smartDevices/lightbulb.png') }}" style="width: 70px; height: 70px;">
+                    <br>
+                    <div class="slider mt-2">
+                        <input type="checkbox" id="lights-toggle" class="toggle">
+                        <label for="lights-toggle"></label>
+                    </div>
                     <p class="mb-0">4 kWh</p>
                     <p class="text-muted mt-0">Active for # hours</p>
                 </div>
                 <div class="col-6 col-md-4 col-lg-3 text-center">
                     <h5 class="mb-0">Speaker</h5>
                     <img class="img-circle" alt="" src="{{ url_for('static', filename='images/smartDevices/voice-assistant.png') }}" style="width: 70px; height: 70px;">
+                    <br>
+                    <div class="slider mt-2">
+                        <input type="checkbox" id="speaker-toggle" class="toggle">
+                        <label for="speaker-toggle"></label>
+                    </div>
                     <p class="mb-0">4 kWh</p>
                     <p class="text-muted mt-0">Active for # hours</p>
                 </div>
+                <div class="col-6 col-md-4 col-lg-3 text-center">
+                    <button id="add-appliance-btn" class="btn btn-secondary rounded-circle mt-5 btn-lg">
+                        <i class="bi bi-plus"></i>
+                    </button>
+                    <p class="text-muted mt-2">Add Appliance</p>
+                </div>
+                
             </div>
+
+            <!-- Add Appliance modal -->
+            <div id="addApplianceModal" class="modal">
+                <div class="modal-content rounded-4 shadow">
+                    <div class="col-lg-12">
+                        <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary bg-light" method="POST" action="">
+                            {{ form.hidden_tag() }}
+                            <fieldset class="form-group">
+                                <legend class="border-bottom mb-4">Add Appliance</legend>
+                                Device Details
+                                ...
+                                
+                            </fieldset>
+                            <div class="border-top pt-3">
+                                <small class="text-body-secondary">
+                                    Wanna go <a class="ml-2" href="{{ url_for('home') }}">back?</a>
+                                </small>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
 
             <!-- <div class="row">
                 <h3>Energy Consumption Trends</h3>
@@ -216,10 +276,6 @@
                         <li>...</li>
                     </ul>
                 </div>
-
-                <!-- <div>
-                    <h3>Monthly Expense</h3>
-                </div> -->
             </div>
         </div>
     <!-- </div> -->

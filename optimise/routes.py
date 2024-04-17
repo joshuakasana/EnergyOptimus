@@ -53,7 +53,7 @@ def save_data_to_database(data, user_id, light, motion, converted_datetime):
 # @app.route("/base")
 # @app.route("/index")
 def base():
-    return render_template('index.html')
+    return render_template('index.html', title='Satient')
 
 
 

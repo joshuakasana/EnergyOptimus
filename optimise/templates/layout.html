@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/settingsModal.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-C3PDvnph6wVCkVXs0IwK7WjJgJo+UYKbFYW7Rz4Vwylcg5ejHTF7wB+4iOd36vMm5g4vTnZzVtGDSx2jPrmq2g==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     {% if title %}
         <title>{{ title }}</title>
@@ -27,14 +28,14 @@
     <div class="container">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <div class="col-md-3 mb-2 mb-md-0">
-                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-black text-decoration-none">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
                     <span class="fs-3">Satient</span>    
                 </a>
             </div>
     
             <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="{{ url_for('base') }}" class="nav-link px-2 link-secondary">Home</a></li>
-                <li><a href="{{ url_for('home') }}" class="nav-link px-2">Action Center</a></li>
+                <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-light">Action Center</a></li>
                 <!-- <li><a href="#" class="nav-link px-2">Pricing</a></li>
                 <li><a href="#" class="nav-link px-2">FAQs</a></li>
                 <li><a href="#" class="nav-link px-2">About</a></li> -->
@@ -46,7 +47,7 @@
                         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="{{ url_for('static', filename='images/funnyCat.jpg') }}" alt="mdo" width="32" height="32" class="rounded-circle">
                         </a>
-                        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+                        <ul class="dropdown-menu text-small" id="dropdown-menu" aria-labelledby="dropdownUser1">
                             <li><a class="dropdown-item" href="#" id="settingsButton">Settings</a></li>
                             <li><a class="dropdown-item" href="#" id="profileButton">Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -87,7 +88,13 @@
         </div>
     </div>
 
-    <main role="main" class="container" id="main-overall">
+    <main role="main" class="container"
+        {% if title == "Satient" %}
+            id="main-overall-index"
+        {% else %}
+            id="main-overall"
+        {% endif %}
+    >
 
         <div class="row">
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -106,7 +113,13 @@
 
         <div class="container">
             <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-              <p class="col-md-4 mb-0 text-muted">© 2024 Company, Inc</p>
+              <p
+                {% if title == 'Satient'%}
+                    class="col-md-4 mb-0 text-white"
+                {% else %}
+                    class="col-md-4 mb-0 text-muted"
+                {% endif %} 
+              >© 2024 Company, Inc</p>
           
               <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                 <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
@@ -131,5 +144,6 @@
     <script src="{{ url_for('static', filename='scripts/averageConsumption.js') }}"></script>
     <script src="{{ url_for('static', filename='scripts/currentTempHumid.js') }}"></script>
     <script src="{{ url_for('static', filename='scripts/energyHistoryPlot.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/addAppliance.js') }}"></script>
 </body>
 </html>
