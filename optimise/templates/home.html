@@ -6,6 +6,202 @@
                 Welcome Joshua
             </h2>
         </div> -->
+
+        <!-- The changeExp modal -->
+        <div id="profileModal" class="modal">
+            <div class="modal-content rounded-4 shadow">
+                <h2>Profile</h2>
+                <div class="col-lg-12">
+                    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary bg-light" method="POST" action="">
+                        {{ form.hidden_tag() }}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">Preferences</legend>
+                            
+                            <div class="form-group">
+                                {{ form.temperature_preference.label(class="form-control-label") }}
+                                {% if form.temperature_preference.errors %}
+                                    {{ form.temperature_preference(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.temperature_preference.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.temperature_preference(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.lighting_preference.label(class="form-control-label") }}
+                                {% if form.lighting_preference.errors %}
+                                    {{ form.lighting_preference(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.lighting_preference.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.lighting_preference(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.tv_watchtime.label(class="form-control-label") }}
+                                {% if form.tv_watchtime.errors %}
+                                    {{ form.tv_watchtime(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.tv_watchtime.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.tv_watchtime(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.humidity_levels.label(class="form-control-label") }}
+                                {% if form.humidity_levels.errors %}
+                                    {{ form.humidity_levels(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.humidity_levels.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.humidity_levels(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.appliance_preference.label(class="form-control-label") }}
+                                {% if form.appliance_preference.errors %}
+                                    {{ form.appliance_preference(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.appliance_preference.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.appliance_preference(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.sleep_time.label(class="form-control-label") }}
+                                {% if form.sleep_time.errors %}
+                                    {{ form.sleep_time(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.sleep_time.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.sleep_time(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.occupancy_preference.label(class="form-control-label") }}
+                                {% if form.occupancy_preference.errors %}
+                                    {{ form.occupancy_preference(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.occupancy_preference.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.occupancy_preference(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.custom_lighting_preference.label(class="form-control-label") }}
+                                {% if form.custom_lighting_preference.errors %}
+                                    {{ form.custom_lighting_preference(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.custom_lighting_preference.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.custom_lighting_preference(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.custom_tv_watchtime.label(class="form-control-label") }}
+                                {% if form.custom_tv_watchtime.errors %}
+                                    {{ form.custom_tv_watchtime(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.custom_tv_watchtime.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.custom_tv_watchtime(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.custom_tv_watchtime.label(class="form-control-label") }}
+                                {% if form.custom_tv_watchtime.errors %}
+                                    {{ form.custom_tv_watchtime(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.custom_tv_watchtime.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.custom_tv_watchtime(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.custom_appliance_preference.label(class="form-control-label") }}
+                                {% if form.custom_appliance_preference.errors %}
+                                    {{ form.custom_appliance_preference(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.custom_appliance_preference.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.custom_appliance_preference(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.custom_sleep_time.label(class="form-control-label") }}
+                                {% if form.custom_sleep_time.errors %}
+                                    {{ form.custom_sleep_time(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.custom_sleep_time.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.custom_sleep_time(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.custom_occupancy_preference.label(class="form-control-label") }}
+                                {% if form.custom_occupancy_preference.errors %}
+                                    {{ form.custom_occupancy_preference(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.custom_occupancy_preference.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.custom_occupancy_preference(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+
+
+                        </fieldset>
+                        <div class="form-group">
+                            {{ form.submit(class="w-100 btn btn-lg btn-primary btn-outline-info") }}
+                        </div>
+                        <div class="border-top pt-3">
+                            <small class="text-body-secondary">
+                                Wanna go <a class="ml-2" href="{{ url_for('home') }}">back?</a>
+                            </small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>  
         <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-bottom">
             <div class="col-md-4 d-flex align-items-center">
                 <h2 class="pb-2 mb-2 ">
@@ -104,26 +300,26 @@
                 <div class="modal-content rounded-4 shadow">
                     <div class="col-lg-12">
                         <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary bg-light" method="POST" action="">
-                            {{ form.hidden_tag() }}
+                            {{ expense_form.hidden_tag() }}
                             <fieldset class="form-group">
                                 <legend class="border-bottom mb-4">Update Expense Budget</legend>
                                 
                                 <div class="form-group">
-                                    {{ form.expense_budget.label(class="form-control-label") }}
-                                    {% if form.expense_budget.errors %}
-                                        {{ form.expense_budget(class="form-control form-control-lg is-invalid") }}
+                                    {{ expense_form.expense_budget.label(class="form-control-label") }}
+                                    {% if expense_form.expense_budget.errors %}
+                                        {{ expense_form.expense_budget(class="form-control form-control-lg is-invalid") }}
                                         <div class="invalid-feedback">
                                             {% for error in form.expense_budget.errors %}
                                                 <span>{{ error }}</span>
                                             {% endfor %}
                                         </div>
                                     {% else %}
-                                        {{ form.expense_budget(class="form-control form-control-lg") }}
+                                        {{ expense_form.expense_budget(class="form-control form-control-lg") }}
                                     {% endif %}
                                 </div>
                             </fieldset>
                             <div class="form-group">
-                                {{ form.submit(class="w-100 btn btn-lg btn-primary btn-outline-info") }}
+                                {{ expense_form.submit(class="w-100 btn btn-lg btn-primary btn-outline-info") }}
                             </div>
                             <div class="border-top pt-3">
                                 <small class="text-body-secondary">

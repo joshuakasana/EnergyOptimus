@@ -20,6 +20,7 @@ class User(db.Model, UserMixin):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 
     stats = db.relationship('Stats', backref='user', lazy=True)
+    preferences = db.relationship('Preference', backref='user', lazy=True)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
@@ -40,3 +41,11 @@ class Stats(db.Model):
     def __repr__(self):
         return f"Stats('{self.device_id}', '{self.date}')"
 
+class Preference(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    preference_name = db.Column(db.String(100), nullable=False)
+    preference_value = db.Column(db.String(255), nullable=False)
+
+    def __repr__(self):
+        return f"Preference('{self.preference_name}', '{self.preference_value}')"

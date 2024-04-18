@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from flask import render_template, url_for, redirect, flash, request, jsonify, abort
 from sqlalchemy import func
 from optimise import app, db, bcrypt
-from optimise.forms import RegistrationForm, LoginForm, changeExpenseBudget
+from optimise.forms import RegistrationForm, LoginForm, changeExpenseBudget, PreferenceForm
 from optimise.models import User, Stats
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -68,13 +68,17 @@ def home():
     month_predict = 13000
     currentMonth_expense = 7409.99
     savings = budget - currentMonth_expense
-    form = changeExpenseBudget()
-    if form.validate_on_submit():
-        current_user.budget = form.expense_budget.data
+    expense_form = changeExpenseBudget()
+    form = PreferenceForm()
+    if expense_form.validate_on_submit():
+        current_user.budget = expense_form.expense_budget.data
         db.session.commit()
         flash(f'Expense Budget updated successfully!', 'success')
         return redirect(url_for('home'))
-    return render_template('home.html', title='Action Center', form=form,
+    if form.validate_on_submit():
+        flash(f'Preferences set successfully!', 'success')
+        return redirect(url_for('home'))
+    return render_template('home.html', title='Action Center', expense_form=expense_form, form=form,
                             first_name=first_name, budget=budget, month_predict=month_predict, 
                             currentMonth_expense=currentMonth_expense, savings=savings)
 
