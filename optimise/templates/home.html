@@ -258,7 +258,7 @@
                                 <div class="card-body">
                                     <div class="dropdown">
                                         <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true">
-                                            <span class="text-muted mb-0">Expected Expense</span>
+                                            <span class="text-muted mb-0">Target Expense</span>
                                         </a>
                                         <ul class="dropdown-menu text-small" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 34px);" data-popper-placement="bottom-start">
                                             <li>
@@ -336,6 +336,14 @@
                 <!-- <canvas id="consumptionChart"></canvas> -->
                 <div id="energy-plot"></div>
             </div>
+
+            <div class="row">
+                <h3>Cost Trends</h3>
+                <canvas id="consumptionChart"></canvas>
+                <!-- <div id="energy-plot"></div> -->
+            </div>
+
+            <br>
             
 
             <div class="row bg-light border rounded-start">
@@ -468,8 +476,21 @@
                     <h3>Recommendations</h3>
                     <ul>
                         <li>Switch off your bathroom light</li>
+                        <li>TV was on for almost 4 hours <br> <span class="text-muted">Set a TV sleep time</span></li>
                         <li>Switch off your water heater <br> <span class="text-muted">Would save you 10W of power</span></li>
                         <li>...</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3>Insights</h3>
+                    <ul>
+                        <li>Average time on for lights is 8 hours</li>
+                        <li>TV was on for 5 hours</li>
+                        <li>More power consumption in your absentia consider turning off some appliance</li>
+                        {% for tip in tips %}
+                            <li>{{ tip }}</li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>

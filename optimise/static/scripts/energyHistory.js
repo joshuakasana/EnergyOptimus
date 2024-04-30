@@ -13,7 +13,16 @@ var consumptionData = {
         pointHoverRadius: 8,
         pointHoverBackgroundColor: "rgba(54, 162, 235, 1)",
         pointHoverBorderColor: "#fff"
-    }]
+    },
+    {
+        label: "Constant Value",
+        data: Array(7).fill(240), // Replace 300 with the constant value you want to plot
+        borderColor: "rgba(255, 99, 132, 1)", // Red color for the line
+        borderWidth: 2,
+        fill: false, // Don't fill the area under the line
+        pointRadius: 0 // Don't display points on the line
+    }
+]
 };
 
 // Configure options for the chart

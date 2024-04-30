@@ -44,8 +44,9 @@ class Stats(db.Model):
 class Preference(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    preference_name = db.Column(db.String(100), nullable=False)
-    preference_value = db.Column(db.String(255), nullable=False)
+    preference_name = db.Column(db.String(50), nullable=False)
+    preference_value1 = db.Column(db.String(30), nullable=False)
+    preference_value2 = db.Column(db.String(30), nullable=True)
 
     def __repr__(self):
         return f"Preference('{self.preference_name}', '{self.preference_value}')"
