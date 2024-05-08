@@ -64,27 +64,56 @@ def home():
     budget = current_user.budget
 
     tips = recommendations_tips()
+
+    hourly_consumptions = average_energy_per_hour_all()
+    cumulative_hourly_expenses = cumulative_hourly_costs(hourly_consumptions, cost_per_watt_hour)
+    latest_hour, latest_cost = cumulative_hourly_expenses[-1]
+
+
     
 
     month_predict = 13000
-    currentMonth_expense = 7409.99
-    savings = budget - currentMonth_expense
+    currentMonth_expense = round(latest_cost, 2)
+    savings = round((budget - currentMonth_expense), 2)
     expense_form = changeExpenseBudget()
-    form = PreferenceForm()
+    pform = PreferenceForm()
     if expense_form.validate_on_submit():
         current_user.budget = expense_form.expense_budget.data
         db.session.commit()
         flash(f'Expense Budget updated successfully!', 'success')
         return redirect(url_for('home'))
-    if form.validate_on_submit():
+    if pform.validate_on_submit():
         flash(f'Preferences set successfully!', 'success')
         return redirect(url_for('home'))
-    return render_template('home.html', title='Action Center', expense_form=expense_form, form=form,
+    return render_template('home.html', title='Action Center', expense_form=expense_form, pform=pform,
                             first_name=first_name, budget=budget, month_predict=month_predict, 
                             currentMonth_expense=currentMonth_expense, savings=savings, tips=tips)
 
+
+def average_energy_per_hour_all():
+    hourly_consumptions = db.session.query(
+        func.strftime('%Y-%m-%d %H:00:00', Stats.date).label('hour_truncated'),
+        func.avg(Stats.energy).label('average_energy')
+    ).group_by(
+        func.strftime('%Y-%m-%d %H:00:00', Stats.date)
+    ).all()
+    return hourly_consumptions
+
+def cumulative_hourly_costs(hourly_consumptions, cost_per_watt_hour):
+    cumulative_costs = []
+    cumulative_energy = 0
+
+    for hour, value in hourly_consumptions:
+        cumulative_energy += value
+        cumulative_cost = cumulative_energy * cost_per_watt_hour
+        cumulative_costs.append((hour, cumulative_cost))
+
+    return cumulative_costs
+
+
+
 def average_energy_per_hour(target_date):
-    average_eph = db.session.query(
+    hourly_consumptions = db.session.query(
         func.strftime('%Y-%m-%d %H:00:00', Stats.date).label('hour_truncated'),
         func.avg(Stats.energy).label('average_energy')
     ).filter(
@@ -92,7 +121,8 @@ def average_energy_per_hour(target_date):
     ).group_by(
         func.strftime('%Y-%m-%d %H:00:00', Stats.date)
     ).all()
-
+    
+    average_eph = overall_power_consumption(hourly_consumptions)
     return average_eph
 
 def overall_power_consumption(hourly_consumptions):
@@ -281,9 +311,7 @@ def recommendations_tips():
 
     # Day's consumption
     today_date = (datetime.today().date()).strftime('%Y-%m-%d') 
-    consumptionToday = overall_power_consumption(
-        average_energy_per_hour(today_date) # Hourly consumptions today
-    )
+    consumptionToday = average_energy_per_hour(today_date)
 
     if consumptionToday > 22:
         # Consider sum target expense math
@@ -317,6 +345,7 @@ def get_current_data():
         'humidity': humidity
     })
 
+# Energy Trends
 @app.route('/get_energy_consumption', methods=['GET'])
 @login_required
 def get_energy_consumption():
@@ -374,6 +403,26 @@ def get_energy_consumption():
         'average_energy_yesterday': average_energy_yesterday,
         'average_energy_today': average_energy_today
     })
+
+# Assuming the cost per Watt-hour is UGX 250
+cost_per_watt_hour = 250
+
+@app.route('/track_energy_cost', methods=['GET'])
+@login_required
+def track_energy_cost():
+
+    hourly_consumptions = average_energy_per_hour_all()
+    cumulative_hourly_expenses = cumulative_hourly_costs(hourly_consumptions, cost_per_watt_hour)
+
+    target_expense = current_user.budget # Set value by user from User model
+
+    data = {
+        'target_expense': target_expense,
+        'cumulative_hourly_costs': cumulative_hourly_expenses
+    }
+    return jsonify(data)
+
+
 
 
 @app.route('/get_energy_data', methods=['GET'])

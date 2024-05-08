@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 # from flask_wtf.file import FileField, FileAllowed
 # from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, validators, SelectMultipleField, widgets, TimeField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, validators, SelectField, DateTimeField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from optimise.models import User
 
@@ -69,45 +69,83 @@ class changeExpenseBudget(FlaskForm):
 
 
 # Custom widget to allow entering custom time range
-class CustomTimeRangeWidget(widgets.ListWidget):
-    def __call__(self, field, **kwargs):
-        if not field.data:
-            field.data = []
-        return super().__call__(field, **kwargs)
+# class CustomTimeRangeWidget(widgets.ListWidget):
+#     def __call__(self, field, **kwargs):
+#         if not field.data:
+#             field.data = []
+#         return super().__call__(field, **kwargs)
 
-class TimeRangeField(SelectMultipleField):
-    widget = CustomTimeRangeWidget()
+# class TimeRangeField(SelectMultipleField):
+#     widget = CustomTimeRangeWidget()
+
+# class PreferenceForm(FlaskForm):
+#     APPLIANCE_TIME_RANGES = [
+#         ('08:00-10:00', '08:00 AM - 10:00 AM'),
+#         ('12:00-14:00', '12:00 PM - 02:00 PM'),
+#         ('18:00-20:00', '06:00 PM - 08:00 PM')
+#     ]
+
+#     SLEEP_TIME_RANGES = [
+#         ('22:00-06:00', '10:00 PM - 06:00 AM'),
+#         ('23:00-07:00', '11:00 PM - 07:00 AM'),
+#     ]
+
+#     temperature_preference = IntegerField('Temperature Preference', 
+#                                           validators=[DataRequired()])
+#     lighting_preference = TimeRangeField('Lighting Preference', 
+#                                          choices=APPLIANCE_TIME_RANGES, coerce=str)
+#     tv_watchtime = TimeRangeField('Television Watchtime', 
+#                                   choices=APPLIANCE_TIME_RANGES, coerce=str)
+#     humidity_levels = IntegerField('Humidity Levels', validators=[DataRequired()])
+#     appliance_preference = TimeRangeField('Appliance usage time', 
+#                                           choices=APPLIANCE_TIME_RANGES, coerce=str)
+#     sleep_time = TimeRangeField('Preferred time of sleep', 
+#                                 choices=SLEEP_TIME_RANGES, coerce=str)
+#     occupancy_preference = TimeRangeField('When are you at home', 
+#                                           choices=APPLIANCE_TIME_RANGES, coerce=str)
+    
+#     custom_lighting_preference = StringField('Custom Lighting Preference')
+#     custom_tv_watchtime = StringField('Custom Television Watchtime')
+#     custom_appliance_preference = StringField('Custom Appliance usage time')
+#     custom_sleep_time = StringField('Custom Preferred time of sleep')
+#     custom_occupancy_preference = StringField('Custom When are you at home')
+
+#     submit = SubmitField('Save Preferences')
 
 class PreferenceForm(FlaskForm):
     APPLIANCE_TIME_RANGES = [
+        (None, 'Choose...'),
         ('08:00-10:00', '08:00 AM - 10:00 AM'),
         ('12:00-14:00', '12:00 PM - 02:00 PM'),
         ('18:00-20:00', '06:00 PM - 08:00 PM')
     ]
 
     SLEEP_TIME_RANGES = [
+        (None, 'Choose...'),
         ('22:00-06:00', '10:00 PM - 06:00 AM'),
         ('23:00-07:00', '11:00 PM - 07:00 AM'),
     ]
 
-    temperature_preference = IntegerField('Temperature Preference', 
-                                          validators=[DataRequired()])
-    lighting_preference = TimeRangeField('Lighting Preference', 
-                                         choices=APPLIANCE_TIME_RANGES, coerce=str)
-    tv_watchtime = TimeRangeField('Television Watchtime', 
-                                  choices=APPLIANCE_TIME_RANGES, coerce=str)
+    # language = SelectField(u'Programming Language', 
+    #                        choices=[('cpp', 'C++'), ('py', 'Python'), ('text', 'Plain Text')])
+    temperature_preference = SelectField(u'Temperature Preference', 
+                                         choices=APPLIANCE_TIME_RANGES, validators=[DataRequired()])
+    lighting_preference = SelectField(u'Lighting Preference', 
+                                         choices=APPLIANCE_TIME_RANGES, validators=[DataRequired()])
+    tv_watchtime = SelectField(u'Television Watchtime', 
+                                  choices=APPLIANCE_TIME_RANGES, validators=[DataRequired()])
     humidity_levels = IntegerField('Humidity Levels', validators=[DataRequired()])
-    appliance_preference = TimeRangeField('Appliance usage time', 
+    appliance_preference = SelectField('Appliance usage time', 
                                           choices=APPLIANCE_TIME_RANGES, coerce=str)
-    sleep_time = TimeRangeField('Preferred time of sleep', 
+    sleep_time = SelectField('Preferred time of sleep', 
                                 choices=SLEEP_TIME_RANGES, coerce=str)
-    occupancy_preference = TimeRangeField('When are you at home', 
+    occupancy_preference = SelectField('When are you at home', 
                                           choices=APPLIANCE_TIME_RANGES, coerce=str)
     
-    custom_lighting_preference = StringField('Custom Lighting Preference')
-    custom_tv_watchtime = StringField('Custom Television Watchtime')
-    custom_appliance_preference = StringField('Custom Appliance usage time')
-    custom_sleep_time = StringField('Custom Preferred time of sleep')
-    custom_occupancy_preference = StringField('Custom When are you at home')
+    # custom_lighting_preference = StringField('Custom Lighting Preference')
+    # custom_tv_watchtime = StringField('Custom Television Watchtime')
+    # custom_appliance_preference = StringField('Custom Appliance usage time')
+    # custom_sleep_time = StringField('Custom Preferred time of sleep')
+    # custom_occupancy_preference = StringField('Custom When are you at home')
 
     submit = SubmitField('Save Preferences')

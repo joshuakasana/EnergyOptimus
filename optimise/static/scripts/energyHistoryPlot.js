@@ -43,7 +43,7 @@ function updatePlots() {
         if (window.energyPlot) {
             // Update existing plot
             let data = [energy_trace, predicted_energy_trace];
-            Plotly.react('energy-trace', data, layout)
+            Plotly.react('energy-plot', data, layout)
         } else {
             let data = [energy_trace, predicted_energy_trace];
             window.energyPlot = Plotly.newPlot('energy-plot', data, layout);

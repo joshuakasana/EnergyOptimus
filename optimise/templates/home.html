@@ -11,194 +11,121 @@
         <div id="profileModal" class="modal">
             <div class="modal-content rounded-4 shadow">
                 <h2>Profile</h2>
+                <h4>Your set Preferences</h4>
+                <div>Temperature level</div>
+                <div>Humidity level</div>
+                <div>Lighting Preference</div>
+                <div>Television Watch time</div>
+                <div></div>
                 <div class="col-lg-12">
                     <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary bg-light" method="POST" action="">
-                        {{ form.hidden_tag() }}
+                        {{ pform.hidden_tag() }}
                         <fieldset class="form-group">
-                            <legend class="border-bottom mb-4">Preferences</legend>
-                            
-                            <div class="form-group">
-                                {{ form.temperature_preference.label(class="form-control-label") }}
-                                {% if form.temperature_preference.errors %}
-                                    {{ form.temperature_preference(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.temperature_preference.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.temperature_preference(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.lighting_preference.label(class="form-control-label") }}
-                                {% if form.lighting_preference.errors %}
-                                    {{ form.lighting_preference(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.lighting_preference.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.lighting_preference(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.tv_watchtime.label(class="form-control-label") }}
-                                {% if form.tv_watchtime.errors %}
-                                    {{ form.tv_watchtime(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.tv_watchtime.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.tv_watchtime(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.humidity_levels.label(class="form-control-label") }}
-                                {% if form.humidity_levels.errors %}
-                                    {{ form.humidity_levels(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.humidity_levels.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.humidity_levels(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.appliance_preference.label(class="form-control-label") }}
-                                {% if form.appliance_preference.errors %}
-                                    {{ form.appliance_preference(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.appliance_preference.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.appliance_preference(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.sleep_time.label(class="form-control-label") }}
-                                {% if form.sleep_time.errors %}
-                                    {{ form.sleep_time(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.sleep_time.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.sleep_time(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.occupancy_preference.label(class="form-control-label") }}
-                                {% if form.occupancy_preference.errors %}
-                                    {{ form.occupancy_preference(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.occupancy_preference.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.occupancy_preference(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            
-                            <div class="form-group">
-                                {{ form.custom_lighting_preference.label(class="form-control-label") }}
-                                {% if form.custom_lighting_preference.errors %}
-                                    {{ form.custom_lighting_preference(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.custom_lighting_preference.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.custom_lighting_preference(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.custom_tv_watchtime.label(class="form-control-label") }}
-                                {% if form.custom_tv_watchtime.errors %}
-                                    {{ form.custom_tv_watchtime(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.custom_tv_watchtime.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.custom_tv_watchtime(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.custom_tv_watchtime.label(class="form-control-label") }}
-                                {% if form.custom_tv_watchtime.errors %}
-                                    {{ form.custom_tv_watchtime(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.custom_tv_watchtime.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.custom_tv_watchtime(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.custom_appliance_preference.label(class="form-control-label") }}
-                                {% if form.custom_appliance_preference.errors %}
-                                    {{ form.custom_appliance_preference(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.custom_appliance_preference.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.custom_appliance_preference(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.custom_sleep_time.label(class="form-control-label") }}
-                                {% if form.custom_sleep_time.errors %}
-                                    {{ form.custom_sleep_time(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.custom_sleep_time.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.custom_sleep_time(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                {{ form.custom_occupancy_preference.label(class="form-control-label") }}
-                                {% if form.custom_occupancy_preference.errors %}
-                                    {{ form.custom_occupancy_preference(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.custom_occupancy_preference.errors %}
-                                            <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ form.custom_occupancy_preference(class="form-control form-control-lg") }}
-                                {% endif %}
-                            </div>
-
-
+                            <legend class="border-bottom mb-4">Change Preferences</legend>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    {{ pform.temperature_preference.label(class="form-control-label") }}
+                                    {% if pform.temperature_preference.errors %}
+                                        {{ pform.temperature_preference(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.temperature_preference.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.temperature_preference(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    {{ pform.lighting_preference.label(class="form-control-label") }}
+                                    {% if pform.lighting_preference.errors %}
+                                        {{ pform.lighting_preference(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.lighting_preference.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.lighting_preference(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-md-5">
+                                    {{ pform.tv_watchtime.label(class="form-control-label") }}
+                                    {% if pform.tv_watchtime.errors %}
+                                        {{ pform.tv_watchtime(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.tv_watchtime.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.tv_watchtime(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-md-5">
+                                    {{ pform.humidity_levels.label(class="form-control-label") }}
+                                    {% if pform.humidity_levels.errors %}
+                                        {{ pform.humidity_levels(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.humidity_levels.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.humidity_levels(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    {{ pform.appliance_preference.label(class="form-control-label") }}
+                                    {% if pform.appliance_preference.errors %}
+                                        {{ pform.appliance_preference(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.appliance_preference.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.appliance_preference(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    {{ pform.sleep_time.label(class="form-control-label") }}
+                                    {% if pform.sleep_time.errors %}
+                                        {{ pform.sleep_time(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.sleep_time.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.sleep_time(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-md-5">
+                                    {{ pform.occupancy_preference.label(class="form-control-label") }}
+                                    {% if pform.occupancy_preference.errors %}
+                                        {{ pform.occupancy_preference(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.occupancy_preference.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.occupancy_preference(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                            </div>      
                         </fieldset>
-                        <div class="form-group">
-                            {{ form.submit(class="w-100 btn btn-lg btn-primary btn-outline-info") }}
+                        <div class="form-group mt-5">
+                            {{ pform.submit(class="w-100 btn btn-lg btn-primary btn-outline-info") }}
                         </div>
-                        <div class="border-top pt-3">
-                            <small class="text-body-secondary">
-                                Wanna go <a class="ml-2" href="{{ url_for('home') }}">back?</a>
-                            </small>
-                        </div>
+                        
                     </form>
+                </div>
+                <div class="border-top pt-3">
+                    <small class="text-body-secondary">
+                        Wanna go <a class="ml-2" href="{{ url_for('home') }}">back?</a>
+                    </small>
                 </div>
             </div>
         </div>  
@@ -339,8 +266,8 @@
 
             <div class="row">
                 <h3>Cost Trends</h3>
-                <canvas id="consumptionChart"></canvas>
-                <!-- <div id="energy-plot"></div> -->
+                <!-- <canvas id="consumptionChart"></canvas> -->
+                <div id="cost-plot"></div>
             </div>
 
             <br>
@@ -428,7 +355,7 @@
                 <div class="modal-content rounded-4 shadow">
                     <div class="col-lg-12">
                         <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary bg-light" method="POST" action="">
-                            {{ form.hidden_tag() }}
+                            {{ pform.hidden_tag() }}
                             <fieldset class="form-group">
                                 <legend class="border-bottom mb-4">Add Appliance</legend>
                                 Device Details
@@ -496,5 +423,15 @@
             </div>
         </div>
     <!-- </div> -->
+    <script src="{{ url_for('static', filename='scripts/currentDate.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/changeExpModal.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/settingsModal.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/profileModal.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/averageConsumption.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/currentTempHumid.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/energyHistoryPlot.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/costTrend.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/addAppliance.js') }}"></script>
 
 {% endblock content %}
