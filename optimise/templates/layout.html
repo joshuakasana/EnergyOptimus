@@ -47,7 +47,7 @@
                         </a>
                         <ul class="dropdown-menu text-small" id="dropdown-menu" aria-labelledby="dropdownUser1">
                             <li><a class="dropdown-item" href="#" id="settingsButton">Settings</a></li>
-                            <li><a class="dropdown-item" href="#" id="profileButton">Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('profile') }}" >Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{{ url_for('logout') }}">Sign out</a></li>
                         </ul>
@@ -89,8 +89,10 @@
     
 
     <main role="main" class="container"
-        {% if title == "Satient" %}
+        {% if title == "Satient"  %}
             id="main-overall-index"
+        {% elif title == "Profile"  %}
+            id="main-overall"
         {% else %}
             id="main-overall"
         {% endif %}
@@ -114,7 +116,7 @@
         <div class="container">
             <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
               <p
-                {% if title == 'Satient'%}
+                {% if title == 'Satient' %}
                     class="col-md-4 mb-0 text-white"
                 {% else %}
                     class="col-md-4 mb-0 text-muted"

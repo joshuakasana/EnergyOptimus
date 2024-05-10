@@ -22,6 +22,14 @@
   /* max-height: calc(100vh - 120px); Adjust value as needed */
 }
 
+.profile-modal-content {
+  background-color: #fefefe;
+  margin: 1% auto; /* 15% from the top and centered */
+  padding: 5px;
+  border: none;
+  width: 60%; /* Could be more or less, depending on screen size */
+  /* max-height: calc(100vh - 120px); Adjust value as needed */
+}
 /* Close Button */
 .close {
   color: #aaa;

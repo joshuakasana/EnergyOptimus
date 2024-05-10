@@ -6,129 +6,7 @@
                 Welcome Joshua
             </h2>
         </div> -->
-
-        <!-- The changeExp modal -->
-        <div id="profileModal" class="modal">
-            <div class="modal-content rounded-4 shadow">
-                <h2>Profile</h2>
-                <h4>Your set Preferences</h4>
-                <div>Temperature level</div>
-                <div>Humidity level</div>
-                <div>Lighting Preference</div>
-                <div>Television Watch time</div>
-                <div></div>
-                <div class="col-lg-12">
-                    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary bg-light" method="POST" action="">
-                        {{ pform.hidden_tag() }}
-                        <fieldset class="form-group">
-                            <legend class="border-bottom mb-4">Change Preferences</legend>
-                            <div class="row">
-                                <div class="form-group col-sm-6">
-                                    {{ pform.temperature_preference.label(class="form-control-label") }}
-                                    {% if pform.temperature_preference.errors %}
-                                        {{ pform.temperature_preference(class="form-control form-control-lg is-invalid") }}
-                                        <div class="invalid-feedback">
-                                            {% for error in pform.temperature_preference.errors %}
-                                                <span>{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% else %}
-                                        {{ pform.temperature_preference(class="form-control form-control-lg") }}
-                                    {% endif %}
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    {{ pform.lighting_preference.label(class="form-control-label") }}
-                                    {% if pform.lighting_preference.errors %}
-                                        {{ pform.lighting_preference(class="form-control form-control-lg is-invalid") }}
-                                        <div class="invalid-feedback">
-                                            {% for error in pform.lighting_preference.errors %}
-                                                <span>{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% else %}
-                                        {{ pform.lighting_preference(class="form-control form-control-lg") }}
-                                    {% endif %}
-                                </div>
-                                <div class="form-group col-md-5">
-                                    {{ pform.tv_watchtime.label(class="form-control-label") }}
-                                    {% if pform.tv_watchtime.errors %}
-                                        {{ pform.tv_watchtime(class="form-control form-control-lg is-invalid") }}
-                                        <div class="invalid-feedback">
-                                            {% for error in pform.tv_watchtime.errors %}
-                                                <span>{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% else %}
-                                        {{ pform.tv_watchtime(class="form-control form-control-lg") }}
-                                    {% endif %}
-                                </div>
-                                <div class="form-group col-md-5">
-                                    {{ pform.humidity_levels.label(class="form-control-label") }}
-                                    {% if pform.humidity_levels.errors %}
-                                        {{ pform.humidity_levels(class="form-control form-control-lg is-invalid") }}
-                                        <div class="invalid-feedback">
-                                            {% for error in pform.humidity_levels.errors %}
-                                                <span>{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% else %}
-                                        {{ pform.humidity_levels(class="form-control form-control-lg") }}
-                                    {% endif %}
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    {{ pform.appliance_preference.label(class="form-control-label") }}
-                                    {% if pform.appliance_preference.errors %}
-                                        {{ pform.appliance_preference(class="form-control form-control-lg is-invalid") }}
-                                        <div class="invalid-feedback">
-                                            {% for error in pform.appliance_preference.errors %}
-                                                <span>{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% else %}
-                                        {{ pform.appliance_preference(class="form-control form-control-lg") }}
-                                    {% endif %}
-                                </div>
-                                <div class="form-group col-sm-6">
-                                    {{ pform.sleep_time.label(class="form-control-label") }}
-                                    {% if pform.sleep_time.errors %}
-                                        {{ pform.sleep_time(class="form-control form-control-lg is-invalid") }}
-                                        <div class="invalid-feedback">
-                                            {% for error in pform.sleep_time.errors %}
-                                                <span>{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% else %}
-                                        {{ pform.sleep_time(class="form-control form-control-lg") }}
-                                    {% endif %}
-                                </div>
-                                <div class="form-group col-md-5">
-                                    {{ pform.occupancy_preference.label(class="form-control-label") }}
-                                    {% if pform.occupancy_preference.errors %}
-                                        {{ pform.occupancy_preference(class="form-control form-control-lg is-invalid") }}
-                                        <div class="invalid-feedback">
-                                            {% for error in pform.occupancy_preference.errors %}
-                                                <span>{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% else %}
-                                        {{ pform.occupancy_preference(class="form-control form-control-lg") }}
-                                    {% endif %}
-                                </div>
-                            </div>      
-                        </fieldset>
-                        <div class="form-group mt-5">
-                            {{ pform.submit(class="w-100 btn btn-lg btn-primary btn-outline-info") }}
-                        </div>
-                        
-                    </form>
-                </div>
-                <div class="border-top pt-3">
-                    <small class="text-body-secondary">
-                        Wanna go <a class="ml-2" href="{{ url_for('home') }}">back?</a>
-                    </small>
-                </div>
-            </div>
-        </div>  
+ 
         <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-bottom">
             <div class="col-md-4 d-flex align-items-center">
                 <h2 class="pb-2 mb-2 ">
@@ -236,7 +114,7 @@
                                     {% if expense_form.expense_budget.errors %}
                                         {{ expense_form.expense_budget(class="form-control form-control-lg is-invalid") }}
                                         <div class="invalid-feedback">
-                                            {% for error in form.expense_budget.errors %}
+                                            {% for error in expense_form.expense_budget.errors %}
                                                 <span>{{ error }}</span>
                                             {% endfor %}
                                         </div>
@@ -355,7 +233,7 @@
                 <div class="modal-content rounded-4 shadow">
                     <div class="col-lg-12">
                         <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary bg-light" method="POST" action="">
-                            {{ pform.hidden_tag() }}
+                            {{ expense_form.hidden_tag() }}
                             <fieldset class="form-group">
                                 <legend class="border-bottom mb-4">Add Appliance</legend>
                                 Device Details
@@ -406,18 +284,20 @@
                         <li>TV was on for almost 4 hours <br> <span class="text-muted">Set a TV sleep time</span></li>
                         <li>Switch off your water heater <br> <span class="text-muted">Would save you 10W of power</span></li>
                         <li>...</li>
+                        {% for tip in tips %}
+                            <li>{{ tip }}</li>
+                        {% endfor %}
                     </ul>
                 </div>
 
                 <div>
                     <h3>Insights</h3>
+                    <div class="text-muted">{{ first_insight }}</div>
                     <ul>
                         <li>Average time on for lights is 8 hours</li>
                         <li>TV was on for 5 hours</li>
                         <li>More power consumption in your absentia consider turning off some appliance</li>
-                        {% for tip in tips %}
-                            <li>{{ tip }}</li>
-                        {% endfor %}
+                        
                     </ul>
                 </div>
             </div>

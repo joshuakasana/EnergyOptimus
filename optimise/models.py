@@ -46,7 +46,7 @@ class Preference(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     preference_name = db.Column(db.String(50), nullable=False)
     preference_value1 = db.Column(db.String(30), nullable=False)
-    preference_value2 = db.Column(db.String(30), nullable=True)
+    preference_value2 = db.Column(db.String(30), nullable=True, default=None)
 
     def __repr__(self):
-        return f"Preference('{self.preference_name}', '{self.preference_value}')"
+        return f"Preference('{self.preference_name}', '{self.preference_value1}')"

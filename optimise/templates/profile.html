@@ -1,0 +1,210 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="px-4 pt-5 my-5 border-bottom">
+        <h1 class="display-4 fw-bold text-center text-body-emphasis">Profile</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">Your Set Preferences</p>
+            <div class="bd-example m-0 border-0">
+    
+                <ul class="list-group list-group-flush">    
+                    <li class="list-group-item">
+                        <div class="container d-flex flex-wrap justify-content-center">
+                            <div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+                                Temperature level
+                            </div>
+                    
+                            <div class="text-end">
+                                {{ temp }}
+                            </div>
+                        </div>  
+                    </li>
+
+                    <li class="list-group-item">
+                        <div class="container d-flex flex-wrap justify-content-center">
+                            <div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+                                Humidity level
+                            </div>
+                    
+                            <div class="text-end">
+                                {{ humid }}
+                            </div>
+                        </div>  
+                    </li>
+                    <li class="list-group-item">
+                        <div class="container d-flex flex-wrap justify-content-center">
+                            <div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+                                Lighting Preference
+                            </div>
+                    
+                            <div class="text-end">
+                                {{ light }}
+                            </div>
+                        </div>  
+                    </li>
+                    <li class="list-group-item">
+                        <div class="container d-flex flex-wrap justify-content-center">
+                            <div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+                                Television Watch time
+                            </div>
+                    
+                            <div class="text-end">
+                                {{ tv }}
+                            </div>
+                        </div>  
+                    </li>
+                    <li class="list-group-item">
+                        <div class="container d-flex flex-wrap justify-content-center">
+                            <div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+                                Sleep Hours
+                            </div>
+                    
+                            <div class="text-end">
+                                {{ sleep }}
+                            </div>
+                        </div>  
+                    </li>
+                    <li class="list-group-item">
+                        <div class="container d-flex flex-wrap justify-content-center">
+                            <div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+                                Home Occupancy Hours
+                            </div>
+                    
+                            <div class="text-end">
+                                {{ occupancy }}
+                            </div>
+                        </div>  
+                    </li>
+                    <li class="list-group-item">
+                        <div class="container d-flex flex-wrap justify-content-center">
+                            <div class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+                                Appliance Usage Hours
+                            </div>
+                    
+                            <div class="text-end">
+                                {{ appliance }}
+                            </div>
+                        </div>  
+                    </li>
+                </ul>
+                
+          </div>
+        </div>
+        <div class="overflow-hidden" style="max-height: 120vh;">
+            <div class="profile-modal-content rounded-4 shadow">
+                <div class="col-lg-12">
+                    <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary bg-light" method="POST" action="">
+                        {{ pform.hidden_tag() }}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">Change Preferences</legend>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    {{ pform.temperature_preference.label(class="form-control-label") }}
+                                    {% if pform.temperature_preference.errors %}
+                                        {{ pform.temperature_preference(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.temperature_preference.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.temperature_preference(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    {{ pform.lighting_preference.label(class="form-control-label") }}
+                                    {% if pform.lighting_preference.errors %}
+                                        {{ pform.lighting_preference(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.lighting_preference.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.lighting_preference(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-md-5">
+                                    {{ pform.tv_watchtime.label(class="form-control-label") }}
+                                    {% if pform.tv_watchtime.errors %}
+                                        {{ pform.tv_watchtime(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.tv_watchtime.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.tv_watchtime(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-md-5">
+                                    {{ pform.humidity_levels.label(class="form-control-label") }}
+                                    {% if pform.humidity_levels.errors %}
+                                        {{ pform.humidity_levels(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.humidity_levels.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.humidity_levels(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    {{ pform.appliance_preference.label(class="form-control-label") }}
+                                    {% if pform.appliance_preference.errors %}
+                                        {{ pform.appliance_preference(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.appliance_preference.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.appliance_preference(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    {{ pform.sleep_time.label(class="form-control-label") }}
+                                    {% if pform.sleep_time.errors %}
+                                        {{ pform.sleep_time(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.sleep_time.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.sleep_time(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-md-5">
+                                    {{ pform.occupancy_preference.label(class="form-control-label") }}
+                                    {% if pform.occupancy_preference.errors %}
+                                        {{ pform.occupancy_preference(class="form-control form-control-lg is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in pform.occupancy_preference.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ pform.occupancy_preference(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                            </div>      
+                        </fieldset>
+                        <div class="form-group mt-5">
+                            {{ pform.submit(class="w-100 btn btn-lg btn-primary btn-outline-info") }}
+                        </div>
+                        
+                    </form>
+                </div>
+                <div class="border-top pt-3">
+                    <small class="text-body-secondary">
+                        Wanna go <a class="ml-2" href="{{ url_for('home') }}">back?</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='scripts/profileModal.js') }}"></script>
+
+{% endblock content %}

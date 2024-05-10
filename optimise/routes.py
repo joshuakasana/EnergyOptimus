@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, time
-from flask import render_template, url_for, redirect, flash, request, jsonify, abort
+from flask import render_template, url_for, redirect, flash, request, jsonify, abort, session
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from optimise import app, db, bcrypt
 from optimise.forms import RegistrationForm, LoginForm, changeExpenseBudget, PreferenceForm
 from optimise.models import User, Stats, Preference
@@ -63,32 +64,103 @@ def home():
     first_name = current_user.first_name
     budget = current_user.budget
 
-    tips = recommendations_tips()
+    
+    # Consumption
+    today_date = (datetime.today().date()).strftime('%Y-%m-%d')
+    yesterday_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+
+    consumption_ph_today = average_energy_per_hour(today_date)
+    consumption_ph_yesterday = average_energy_per_hour(yesterday_date)
+
+    if abs(consumption_ph_yesterday - consumption_ph_today) <= 5: 
+        first_insight = 'Vola, you are keeping track of your consumption'
+    if abs(consumption_ph_yesterday - consumption_ph_today) > 5: 
+        first_insight = 'Be careful!!!, you are consuming more than yesterday'
+
+
+    tips = recommendationz()
+    print(tips)
 
     hourly_consumptions = average_energy_per_hour_all()
     cumulative_hourly_expenses = cumulative_hourly_costs(hourly_consumptions, cost_per_watt_hour)
     latest_hour, latest_cost = cumulative_hourly_expenses[-1]
 
-
-    
-
     month_predict = 13000
     currentMonth_expense = round(latest_cost, 2)
     savings = round((budget - currentMonth_expense), 2)
     expense_form = changeExpenseBudget()
-    pform = PreferenceForm()
     if expense_form.validate_on_submit():
         current_user.budget = expense_form.expense_budget.data
         db.session.commit()
         flash(f'Expense Budget updated successfully!', 'success')
         return redirect(url_for('home'))
-    if pform.validate_on_submit():
-        flash(f'Preferences set successfully!', 'success')
-        return redirect(url_for('home'))
-    return render_template('home.html', title='Action Center', expense_form=expense_form, pform=pform,
+    return render_template('home.html', title='Action Center', expense_form=expense_form, first_insight=first_insight,
                             first_name=first_name, budget=budget, month_predict=month_predict, 
                             currentMonth_expense=currentMonth_expense, savings=savings, tips=tips)
 
+@app.route("/profile", methods=['GET', 'POST'])
+@login_required
+def profile():
+    temp = (Preference.query.filter_by(user_id=current_user.id, preference_name='Temperature').first()).preference_value1
+    lighting = (Preference.query.filter_by(user_id=current_user.id, preference_name='Lighting').first()).preference_value1
+    tvWatchtime = (Preference.query.filter_by(user_id=current_user.id, preference_name='TV Watchtime').first()).preference_value1
+    humidity = (Preference.query.filter_by(user_id=current_user.id, preference_name='Humidity Levels').first()).preference_value1
+    appliance = (Preference.query.filter_by(user_id=current_user.id, preference_name='Appliance Usage Time').first()).preference_value1
+    sleepTime = (Preference.query.filter_by(user_id=current_user.id, preference_name='Sleep Time').first()).preference_value1
+    occupancy = (Preference.query.filter_by(user_id=current_user.id, preference_name='Occupancy').first()).preference_value1
+    print(temp)
+    pform = PreferenceForm()
+    if pform.validate_on_submit():
+        # Get data from the form
+        user_id = current_user.id  # Assuming you are using Flask-Login
+        temperature_preference = pform.temperature_preference.data
+        lighting_preference = pform.lighting_preference.data
+        tv_watchtime = pform.tv_watchtime.data
+        humidity_levels = pform.humidity_levels.data
+        appliance_preference = pform.appliance_preference.data
+        sleep_time = pform.sleep_time.data
+        occupancy_preference = pform.occupancy_preference.data
+        
+        # Check if preferences already exist for the user
+        existing_preferences = Preference.query.filter_by(user_id=user_id).all()
+        existing_preference_names = {preference.preference_name for preference in existing_preferences}
+        
+        # Update or add preferences
+        preferences_to_add = []
+        for preference_name, preference_value in [
+            ('Temperature', str(temperature_preference)),
+            ('Lighting', lighting_preference),
+            ('TV Watchtime', tv_watchtime),
+            ('Humidity Levels', str(humidity_levels)),
+            ('Appliance Usage Time', appliance_preference),
+            ('Sleep Time', sleep_time),
+            ('Occupancy', occupancy_preference)
+        ]:
+            preference = next((pref for pref in existing_preferences if pref.preference_name == preference_name), None)
+            if preference:
+                # Update existing preference
+                preference.preference_value1 = preference_value
+            else:
+                # Add new preference
+                preference = Preference(
+                    user_id=user_id,
+                    preference_name=preference_name,
+                    preference_value1=preference_value
+                )
+                preferences_to_add.append(preference)
+        
+        try:
+            db.session.add_all(preferences_to_add)
+            db.session.commit()
+            flash('Preferences saved successfully.', 'success')
+        except IntegrityError:
+            db.session.rollback()
+            flash('An error occurred while saving preferences.', 'error')
+
+        flash(f'Preferences set successfully!', 'success')
+        return redirect(url_for('profile'))
+    return render_template('profile.html', title='Profile', pform=pform, temp=temp, humid=humidity,
+                           light=lighting, tv=tvWatchtime, appliance=appliance, sleep=sleepTime, occupancy=occupancy)
 
 def average_energy_per_hour_all():
     hourly_consumptions = db.session.query(
@@ -325,6 +397,134 @@ def recommendations_tips():
         
     return tips
 
+
+def recommendationz():
+    tips = ["Loading.."]
+
+
+    # Occupancy
+    preference_occupancy = Preference.query.filter_by(user_id=current_user.id, preference_name="Occupancy").first()
+    
+    if preference_occupancy:
+        occupancy = preference_occupancy.preference_value1
+        occupancy_start, occupancy_end = map(str, occupancy.split('-'))
+
+        occupancy_start_hour, occupancy_start_minute = map(int, occupancy_start.split(':'))
+        occupancy_end_hour, occupancy_end_minute = map(int, occupancy_end.split(':'))
+
+        sum_of_statsL = db.session.query(db.func.count()).filter(
+            Stats.user_id == current_user.id,
+            Stats.light == True,
+            db.extract('hour', Stats.date) < occupancy_start_hour,
+            db.extract('hour', Stats.date) > occupancy_end_hour
+        ).scalar()
+
+        if sum_of_statsL > 60:
+            tips.append("Turn off the lights when away")
+
+        stat = db.session.query(db.func.count()).filter(
+            Stats.user_id == current_user.id,
+            Stats.energy >= 12,
+            db.extract('hour', Stats.date) >= occupancy_start_hour,
+            db.extract('hour', Stats.date) <= occupancy_end_hour
+        ).scalar()
+        
+        if stat > 4:
+            tips.append("Appliances should be turned off when away")
+
+    # tv Watchtime
+    preference_tvwatchtime = Preference.query.filter_by(user_id=current_user.id, preference_name='TV Watchtime').first()
+
+    if preference_tvwatchtime:
+        tvWatchtime = preference_tvwatchtime.preference_value1
+        tvWatchtime_start, tvWatchtime_end = map(str, tvWatchtime.split('-'))
+
+        tvWatchtime_start_hour, tvWatchtime_start_minute = map(int, tvWatchtime_start.split(':'))
+        tvWatchtime_end_hour, tvWatchtime_end_minute = map(int, tvWatchtime_end.split(':'))
+
+        sum_of_statsL = db.session.query(db.func.count()).filter(
+            Stats.user_id == current_user.id,
+            Stats.light == True,
+            db.extract('hour', Stats.date) < tvWatchtime_start_hour,
+            db.extract('hour', Stats.date) > tvWatchtime_end_hour
+        ).scalar()
+
+        if sum_of_statsL > 60:
+            tips.append("Television is stays on beyond set watch time")
+
+    # Sleeptime
+    preference_sleep = Preference.query.filter_by(user_id=current_user.id, preference_name='Sleep Time').first()
+    if preference_sleep:
+        sleep_time = preference_sleep.preference_value1
+        sleep_start, sleep_end = map(str, sleep_time.split('-'))
+
+        sleep_start_hour, sleep_start_minute = map(int, sleep_start.split(':'))
+        sleep_end_hour, sleep_end_minute = map(int, sleep_end.split(':'))
+
+        # Check lights during sleep time
+        sum_of_lightChecks = db.session.query(db.func.count()).filter(
+            Stats.user_id == current_user.id,
+            Stats.light == True,
+            db.extract('hour', Stats.date) >= sleep_start_hour,
+            db.extract('hour', Stats.date) <= sleep_end_hour
+        ).scalar()
+
+        # Check late night activity
+        sum_of_statsLM = db.session.query(db.func.count()).filter(
+            Stats.user_id == current_user.id,
+            Stats.light == True,
+            Stats.motion == True,
+            db.extract('hour', Stats.date) >= sleep_start_hour,
+            db.extract('hour', Stats.date) <= sleep_end_hour
+        ).scalar()
+
+        if sum_of_lightChecks > 60:
+            tips.append("Lights are unnecessarily ON during sleep hours")
+
+        if sum_of_statsLM > 80:
+            tips.append("Late night activity during sleeping hours highten power consumption")
+    
+    # Temperature
+    preference_temperature = Preference.query.filter_by(user_id=current_user.id, preference_name='Temperature').first()
+
+    if preference_temperature:
+        temp = int(preference_temperature.preference_value1)
+        stat = Stats.query.filter_by(user_id=current_user.id).order_by(Stats.date.desc()).first()
+
+        # Calculate the timestamp 60 minutes (1 hour) ago
+        time_ago = datetime.now() - timedelta(hours=3)
+
+        # Query to get the average temperature record in the last 60 minutes (1 hour)
+        average_temperature_time_ago = Stats.query \
+            .filter(Stats.user_id == current_user.id) \
+            .filter(Stats.date >= time_ago) \
+            .with_entities(func.avg(Stats.temperature)) \
+            .scalar()
+        if average_temperature_time_ago is None:
+            average_temperature_time_ago = 0
+        if abs(average_temperature_time_ago - temp) > 3:
+            tips.append("Schedule your AC")
+
+        # Get the current time
+        current_time = datetime.now().time()
+
+        # Define daytime range (for example, from 6 AM to 6 PM)
+        daytime_start = datetime.strptime('09:00:00', '%H:%M:%S').time()
+        daytime_end = datetime.strptime('17:00:00', '%H:%M:%S').time()
+
+        # Check if current time is within the daytime range
+        if daytime_start <= current_time <= daytime_end:
+            # print("It's daytime!")
+            if temp - average_temperature_time_ago > 3:
+                tips.append(f'You may use Natural ventilation between {daytime_start} and {daytime_end} hours')
+        
+            
+
+
+    
+    return tips
+
+
 @app.route('/get_current_data', methods=['GET'])
 @login_required
 def get_current_data():
@@ -396,8 +596,6 @@ def get_energy_consumption():
     # Calculate the average energy consumption for yesterday and today
     average_energy_yesterday = round(total_energy_yesterday / num_records_yesterday, 2) if num_records_yesterday > 0 else 0
     average_energy_today = round(total_energy_today / num_records_today, 2) if num_records_today > 0 else 0
-    print('1....',average_energy_today)
-    print('2....',average_energy_yesterday)
 
     return jsonify({
         'average_energy_yesterday': average_energy_yesterday,
@@ -471,6 +669,8 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
+            session.clear()
+            session['user_id'] = user.id  
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
@@ -480,5 +680,6 @@ def login():
 
 @app.route("/logout")
 def logout():
+    session.clear()
     logout_user()
     return redirect(url_for('base'))
