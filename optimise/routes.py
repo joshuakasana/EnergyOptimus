@@ -81,12 +81,19 @@ def home():
     tips = recommendationz()
     print(tips)
 
-    hourly_consumptions = average_energy_per_hour_all()
-    cumulative_hourly_expenses = cumulative_hourly_costs(hourly_consumptions, cost_per_watt_hour)
-    latest_hour, latest_cost = cumulative_hourly_expenses[-1]
+    # Actual energy
+    hourly_consumptions_actual = average_energy_per_hour_all()
+    cumulative_hourly_expenses = cumulative_hourly_costs(hourly_consumptions_actual, cost_per_watt_hour)
+    latest_hour_actual, latest_cost_actual = cumulative_hourly_expenses[-1]
 
-    month_predict = 13000
-    currentMonth_expense = round(latest_cost, 2)
+    # Predicted energy
+    hourly_consumptions_predicted = average_energy_per_hour_all_predict()
+    cumulative_hourly_expenses_predict = cumulative_hourly_costs(hourly_consumptions_predicted, cost_per_watt_hour)
+    latest_hour_predict, latest_cost_predict = cumulative_hourly_expenses_predict[-1]
+
+
+    month_predict = round(latest_cost_predict, 2)
+    currentMonth_expense = round(latest_cost_actual, 2)
     savings = round((budget - currentMonth_expense), 2)
     expense_form = changeExpenseBudget()
     if expense_form.validate_on_submit():
@@ -162,10 +169,21 @@ def profile():
     return render_template('profile.html', title='Profile', pform=pform, temp=temp, humid=humidity,
                            light=lighting, tv=tvWatchtime, appliance=appliance, sleep=sleepTime, occupancy=occupancy)
 
+# Actual
 def average_energy_per_hour_all():
     hourly_consumptions = db.session.query(
         func.strftime('%Y-%m-%d %H:00:00', Stats.date).label('hour_truncated'),
         func.avg(Stats.energy).label('average_energy')
+    ).group_by(
+        func.strftime('%Y-%m-%d %H:00:00', Stats.date)
+    ).all()
+    return hourly_consumptions
+
+# Predict
+def average_energy_per_hour_all_predict():
+    hourly_consumptions = db.session.query(
+        func.strftime('%Y-%m-%d %H:00:00', Stats.date).label('hour_truncated'),
+        func.avg(Stats.energy_prediction).label('average_energy')
     ).group_by(
         func.strftime('%Y-%m-%d %H:00:00', Stats.date)
     ).all()
