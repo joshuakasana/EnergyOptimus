@@ -17,14 +17,14 @@ function updatePlots() {
         let energy_trace = {
             x: timestamps,
             y: energy_values,
-            mode: 'lines+markers',
+            mode: 'lines',
             name: 'Actual Energy'
         };
 
         let predicted_energy_trace = {
             x: timestamps,
             y: predicted_energy_values,
-            mode: 'lines+markers',
+            mode: 'lines',
             name: 'Predicted Energy'
         };
 
@@ -35,7 +35,9 @@ function updatePlots() {
                 rangeslider: { visible: false },
                 range: [Math.max(0, timestamps.length - 19), Math.max(40, timestamps.length)]
             },
-            yaxis: { title: 'Energy Consumption' },
+            yaxis: { 
+                title: 'Energy Consumption'
+            },
             showlegend: true
         };
 

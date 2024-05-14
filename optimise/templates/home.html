@@ -25,7 +25,7 @@
                     <p class="lead">Your devices are under your control.</p>
                         
                     <div class="row">
-                        <p class="h4">Average Power Consumption</p>
+                        <p class="h4">Total Power Consumption</p>
                         <div class="col-md-6 col-lg-4 mb-3">
                             <div class="card bg-light" style="max-width: 8rem;">
                                 <div class="card-body text-black">
@@ -275,31 +275,27 @@
                         <p class="card-title text-muted">Temperature</p>
                         <p class="card-text fs-4" id="current-temperature">Loading...</p>
                     </div>
-                </div>
-                
+                </div> 
+
                 <div>
-                    <h3>Recommendations</h3>
-                    <ul>
-                        <li>Switch off your bathroom light</li>
-                        <li>TV was on for almost 4 hours <br> <span class="text-muted">Set a TV sleep time</span></li>
-                        <li>Switch off your water heater <br> <span class="text-muted">Would save you 10W of power</span></li>
-                        <li>...</li>
-                        {% for tip in tips %}
-                            <li>{{ tip }}</li>
+                    <h3 class="ml-2">Insights</h3>
+                    <ol>
+                        {% for insight in insights %}
+                            <li>{{ insight }}</li>
                         {% endfor %}
-                    </ul>
+                    </ol>
                 </div>
 
                 <div>
-                    <h3>Insights</h3>
-                    <div class="text-muted">{{ first_insight }}</div>
+                    <h3>Recommendations</h3>
                     <ul>
-                        <li>Average time on for lights is 8 hours</li>
-                        <li>TV was on for 5 hours</li>
-                        <li>More power consumption in your absentia consider turning off some appliance</li>
+                        {% for tip in tips %}
+                            <li>{{ tip }}</li>
+                        {% endfor %}
                         
                     </ul>
                 </div>
+
             </div>
         </div>
     <!-- </div> -->
