@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, time
 from flask import render_template, url_for, redirect, flash, request, jsonify, abort, session
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, and_
 from sqlalchemy.exc import IntegrityError
 from optimise import app, db, bcrypt
 from optimise.forms import RegistrationForm, LoginForm, changeExpenseBudget, PreferenceForm
@@ -340,15 +340,16 @@ def recommendationz():
             Stats.light == True,
             Stats.motion == False,
             (
-                (
-                    (sleep_start_hour <= sleep_end_hour) &
-                    (db.extract('hour', Stats.date) >= sleep_start_hour) & 
-                    (db.extract('hour', Stats.date) <= sleep_end_hour)
-                ) | (
-                    (sleep_start_hour > sleep_end_hour) &
+                and_(
+                    (sleep_start_hour <=sleep_end_hour),
+                    (db.extract('hour', Stats.date) > sleep_start_hour),
+                    (db.extract('hour', Stats.date) < sleep_end_hour)
+                ) |
+                and_(
+                    (sleep_start_hour > sleep_end_hour),
                     (
-                        (db.extract('hour', Stats.date) >= sleep_start_hour) | 
-                        (db.extract('hour', Stats.date) <= sleep_end_hour)
+                        (db.extract('hour', Stats.date) > sleep_start_hour) |
+                        (db.extract('hour', Stats.date) < sleep_end_hour)
                     )
                 )
             )
@@ -362,8 +363,20 @@ def recommendationz():
             Stats.user_id == current_user.id,
             Stats.light == True,
             Stats.motion == True,
-            db.extract('hour', Stats.date) >= sleep_start_hour,
-            db.extract('hour', Stats.date) <= sleep_end_hour
+            (
+                and_(
+                    (sleep_start_hour <=sleep_end_hour),
+                    (db.extract('hour', Stats.date) > sleep_start_hour),
+                    (db.extract('hour', Stats.date) < sleep_end_hour)
+                ) |
+                and_(
+                    (sleep_start_hour > sleep_end_hour),
+                    (
+                        (db.extract('hour', Stats.date) > sleep_start_hour) |
+                        (db.extract('hour', Stats.date) < sleep_end_hour)
+                    )
+                )
+            )
         ).scalar()
 
         if sum_of_statsLM > 5:
