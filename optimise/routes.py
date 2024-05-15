@@ -258,39 +258,39 @@ def recommendationz():
         occupancy_start_hour, occupancy_start_minute = map(int, occupancy_start.split(':'))
         occupancy_end_hour, occupancy_end_minute = map(int, occupancy_end.split(':'))
 
-        # query = Stats.query.filter(
-        #     Stats.user_id == current_user.id,
-        #     Stats.light == True,
-        #     Stats.motion == False,  # Condition for non-occupancy
-        #     or_(
-        #         db.extract('hour', Stats.date) < occupancy_start_hour,
-        #         db.extract('hour', Stats.date) > occupancy_end_hour
-        #     )
-        # ).order_by(Stats.date.desc())
-
-        # sum_of_statsL = query.count()
-        # print("Sumz", sum_of_statsL)
-        # Get the current date
-        current_date = datetime.now().date()
-
+        # Lights are on, no motion, outside occupancy hours
         sum_of_statsL = db.session.query(db.func.count()).filter(
             Stats.user_id == current_user.id,
             Stats.light == True,
             Stats.motion == False,
-            db.func.date(Stats.date) == current_date,  # Ensure the date matches the current date
-            db.extract('hour', Stats.date) >= occupancy_end_hour,  # Start from the end of the occupancy period
-            db.extract('hour', Stats.date) < occupancy_start_hour  # Up to the start of the next occupancy period
+            (
+                (
+                    (db.extract('hour', Stats.date) > occupancy_end_hour) & 
+                    (db.extract('hour', Stats.date) < occupancy_start_hour)
+                ) | (
+                    (db.extract('hour', Stats.date) < occupancy_end_hour) | 
+                    (db.extract('hour', Stats.date) > occupancy_start_hour)
+                )
+            ) 
         ).scalar()
 
-        if sum_of_statsL > 10:
+        if sum_of_statsL > 3:
             tips.append("Turn off the lights when away")
             insights.append("Lights stay on when away")
 
         stat = db.session.query(db.func.count()).filter(
             Stats.user_id == current_user.id,
             Stats.energy >= 12,
-            db.extract('hour', Stats.date) >= occupancy_start_hour,
-            db.extract('hour', Stats.date) <= occupancy_end_hour
+            Stats.motion == False,
+            (
+                (
+                    (db.extract('hour', Stats.date) > occupancy_end_hour) & 
+                    (db.extract('hour', Stats.date) < occupancy_start_hour)
+                ) | (
+                    (db.extract('hour', Stats.date) < occupancy_end_hour) | 
+                    (db.extract('hour', Stats.date) > occupancy_start_hour)
+                )
+            ) 
         ).scalar()
         
         if stat > 4:
@@ -310,8 +310,15 @@ def recommendationz():
             Stats.user_id == current_user.id,
             Stats.light == True,
             Stats.motion == False,
-            db.extract('hour', Stats.date) < tvWatchtime_start_hour,
-            db.extract('hour', Stats.date) > tvWatchtime_end_hour
+            (
+                (
+                    (db.extract('hour', Stats.date) > tvWatchtime_end_hour) & 
+                    (db.extract('hour', Stats.date) < tvWatchtime_start_hour)
+                ) | (
+                    (db.extract('hour', Stats.date) < tvWatchtime_end_hour) | 
+                    (db.extract('hour', Stats.date) > tvWatchtime_start_hour)
+                )
+            )
         ).scalar()
 
         if sum_of_statsL > 10:
@@ -331,9 +338,24 @@ def recommendationz():
         sum_of_lightChecks = db.session.query(db.func.count()).filter(
             Stats.user_id == current_user.id,
             Stats.light == True,
-            db.extract('hour', Stats.date) >= sleep_start_hour,
-            db.extract('hour', Stats.date) <= sleep_end_hour
+            Stats.motion == False,
+            (
+                (
+                    (sleep_start_hour <= sleep_end_hour) &
+                    (db.extract('hour', Stats.date) >= sleep_start_hour) & 
+                    (db.extract('hour', Stats.date) <= sleep_end_hour)
+                ) | (
+                    (sleep_start_hour > sleep_end_hour) &
+                    (
+                        (db.extract('hour', Stats.date) >= sleep_start_hour) | 
+                        (db.extract('hour', Stats.date) <= sleep_end_hour)
+                    )
+                )
+            )
         ).scalar()
+
+        if sum_of_lightChecks > 5:
+            tips.append("Lights are unnecessarily ON during sleep hours")
 
         # Check late night activity
         sum_of_statsLM = db.session.query(db.func.count()).filter(
@@ -344,10 +366,7 @@ def recommendationz():
             db.extract('hour', Stats.date) <= sleep_end_hour
         ).scalar()
 
-        if sum_of_lightChecks > 60:
-            tips.append("Lights are unnecessarily ON during sleep hours")
-
-        if sum_of_statsLM > 80:
+        if sum_of_statsLM > 5:
             tips.append("Late night activity during sleeping hours highten power consumption")
     
     # Temperature

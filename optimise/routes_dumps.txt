@@ -1,0 +1,57 @@
+
+# if occupancy_end_hour <= occupancy_start_hour:
+#     adjusted_occupancy_end_hour = occupancy_end_hour + 24
+# else:
+#     adjusted_occupancy_end_hour = occupancy_end_hour
+
+# current_date = datetime.now().date()
+
+# REference
+# def check(num, start, end):
+#     condition1 = (num<start) and (num>end)
+#     condition2 = (num<start) or (num>end)
+    
+#     if (condition1 or condition2):
+#         answer = f"{num} is out of [{start}, {end}]"
+#     else:
+#         answer = f"{num} is in of [{start}, {end}]"
+    
+#     return answer
+    
+
+# test1 = check(23, 8, 18)
+# print(test1)
+
+
+# sum_of_statsL = db.session.query(db.func.count()).filter(
+#     Stats.user_id == current_user.id,
+#     Stats.light == True,
+#     Stats.motion == False,
+#     db.extract('hour', Stats.date) > occupancy_end_hour,
+#     db.extract('hour', Stats.date) < occupancy_start_hour 
+# ).scalar()
+
+# sum_of_statsL = db.session.query(db.func.count()).filter(
+#     Stats.user_id == current_user.id,
+#     Stats.light == True,
+#     Stats.motion == False,
+#     db.extract('hour', Stats.date) < tvWatchtime_start_hour,
+#     db.extract('hour', Stats.date) > tvWatchtime_end_hour
+# ).scalar()
+
+in range
+
+def check(num, start, end):
+    condition1 = (num>=start) & (num<=end) & (start <= end)
+    condition2 = ((num>=start) | (num<=end)) & (start > end) 
+    
+    if (condition1 | condition2):
+      answer = f"{num} is in of [{start}, {end}]"
+    else:
+      answer = f"{num} is out of [{start}, {end}]"
+    
+    return answer
+    
+
+test1 = check(12, 8, 18)
+print(test1)
