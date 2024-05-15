@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 # from flask_wtf.file import FileField, FileAllowed
 # from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, validators, SelectField, DateTimeField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField, TimeField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from optimise.models import User
 
@@ -48,59 +48,81 @@ class LoginForm(FlaskForm):
 class changeExpenseBudget(FlaskForm):
     expense_budget = IntegerField('Expense Budget', validators=[DataRequired()])
     submit = SubmitField('Submit')
-class PreferenceForm(FlaskForm):
-    APPLIANCE_TIME_RANGES = [
-        (None, 'Choose...'),
-        ('08:00-10:00', '08:00 AM - 10:00 AM'),
-        ('12:00-14:00', '12:00 PM - 02:00 PM'),
-        ('18:00-20:00', '06:00 PM - 08:00 PM')
-    ]
+    
+# class PreferenceForm(FlaskForm):
+#     APPLIANCE_TIME_RANGES = [
+#         (None, 'Choose...'),
+#         ('08:00-10:00', '08:00 AM - 10:00 AM'),
+#         ('12:00-14:00', '12:00 PM - 02:00 PM'),
+#         ('18:00-20:00', '06:00 PM - 08:00 PM')
+#     ]
 
-    SLEEP_TIME_RANGES = [
-        (None, 'Choose...'),
+#     SLEEP_TIME_RANGES = [
+#         (None, 'Choose...'),
         
-        ('21:00-05:00', '9:00 PM - 5:00 AM'),
-        ('21:00-05:00', '9:00 PM - 5:00 AM'),
-        ('22:00-06:00', '10:00 PM - 06:00 AM'),
-        ('23:00-07:00', '11:00 PM - 07:00 AM')
-    ]
+#         ('21:00-05:00', '9:00 PM - 5:00 AM'),
+#         ('21:00-05:00', '9:00 PM - 5:00 AM'),
+#         ('22:00-06:00', '10:00 PM - 06:00 AM'),
+#         ('23:00-07:00', '11:00 PM - 07:00 AM')
+#     ]
 
-    temperature_preference = IntegerField(u'Temperature Preference', validators=[DataRequired()])
-    lighting_preference = SelectField(u'Lighting Preference', 
-                                      choices=APPLIANCE_TIME_RANGES, coerce=str,
-                                      validators=[DataRequired()])
-    tv_watchtime = SelectField(u'Television Watchtime', 
-                               choices=APPLIANCE_TIME_RANGES, coerce=str,
-                               validators=[DataRequired()])
-    humidity_levels = IntegerField(u'Humidity Levels', validators=[DataRequired()])
-    appliance_preference = SelectField(u'Appliance usage time', 
-                                       choices=APPLIANCE_TIME_RANGES, coerce=str,
-                                       validators=[DataRequired()])
-    sleep_time = SelectField(u'Preferred time of sleep', 
-                             choices=SLEEP_TIME_RANGES, coerce=str,
-                             validators=[DataRequired()])
-    occupancy_preference = SelectField(u'When are you at home', 
-                                       choices=APPLIANCE_TIME_RANGES, coerce=str,
-                                       validators=[DataRequired(message="Please select an option")])
-
-    submit = SubmitField('Save Preferences')
-
-    def validate_lighting_preference(self, lighting_preference):
-        if lighting_preference.data == "None":
-            raise ValidationError('Please select an option other than "Choose..."')
+#     temperature_preference = IntegerField(u'Temperature Preference', validators=[DataRequired()])
+#     lighting_preference = SelectField(u'Lighting Preference', 
+#                                       choices=APPLIANCE_TIME_RANGES, coerce=str,
+#                                       validators=[DataRequired()])
+#     tv_watchtime = SelectField(u'Television Watchtime', 
+#                                choices=APPLIANCE_TIME_RANGES, coerce=str,
+#                                validators=[DataRequired()])
+#     humidity_levels = IntegerField(u'Humidity Levels', validators=[DataRequired()])
+#     appliance_preference = SelectField(u'Appliance usage time', 
+#                                        choices=APPLIANCE_TIME_RANGES, coerce=str,
+#                                        validators=[DataRequired()])
+#     sleep_time = SelectField(u'Preferred time of sleep', 
+#                              choices=SLEEP_TIME_RANGES, coerce=str,
+#                              validators=[DataRequired()])
+#     occupancy_preference = SelectField(u'When are you at home', 
+#                                        choices=APPLIANCE_TIME_RANGES, coerce=str,
+#                                        validators=[DataRequired(message="Please select an option")])
     
-    def validate_tv_watchtime(self, tv_watchtime):
-        if tv_watchtime.data == "None":
-            raise ValidationError('Please select an option other than "Choose..."')
-    
-    def validate_appliance_preference(self, appliance_preference):
-        if appliance_preference.data == 'None':
-            raise ValidationError('Please select an option other than "Choose..."')
-    
-    def validate_sleeptime(self, sleeptime):
-        if sleeptime.data == 'None':
-            raise ValidationError('Please select an option other than "Choose..."')
 
-    def validate_occupancy_preference(self, occupancy_preference):
-        if occupancy_preference.data == 'None':
-            raise ValidationError('Please select an option other than "Choose..."')
+#     submit = SubmitField('Save Preferences')
+
+#     def validate_lighting_preference(self, lighting_preference):
+#         if lighting_preference.data == "None":
+#             raise ValidationError('Please select an option other than "Choose..."')
+    
+#     def validate_tv_watchtime(self, tv_watchtime):
+#         if tv_watchtime.data == "None":
+#             raise ValidationError('Please select an option other than "Choose..."')
+    
+#     def validate_appliance_preference(self, appliance_preference):
+#         if appliance_preference.data == 'None':
+#             raise ValidationError('Please select an option other than "Choose..."')
+    
+#     def validate_sleeptime(self, sleeptime):
+#         if sleeptime.data == 'None':
+#             raise ValidationError('Please select an option other than "Choose..."')
+
+#     def validate_occupancy_preference(self, occupancy_preference):
+#         if occupancy_preference.data == 'None':
+#             raise ValidationError('Please select an option other than "Choose..."')
+         
+class PreferenceForm(FlaskForm):
+    temperature_preference = IntegerField(u'°C', validators=[DataRequired()])
+    humidity_levels = IntegerField(u'%', validators=[DataRequired()])
+    lighting_preference_from = TimeField('From:', validators=[DataRequired()])
+    lighting_preference_to = TimeField('To:', validators=[DataRequired()])
+    
+    tv_watchtime_from = TimeField('From:', validators=[DataRequired()])
+    tv_watchtime_to = TimeField('To:', validators=[DataRequired()])
+    
+    appliance_preference_from = TimeField('From:', validators=[DataRequired()])
+    appliance_preference_to = TimeField('To:', validators=[DataRequired()])
+    
+    sleep_time_from = TimeField('From:', validators=[DataRequired()])
+    sleep_time_to = TimeField('To:', validators=[DataRequired()])
+    
+    occupancy_preference_from = TimeField('From:', validators=[DataRequired()])
+    occupancy_preference_to = TimeField('To:', validators=[DataRequired()])
+    
+    submit = SubmitField('Save Prefernces')

@@ -65,8 +65,6 @@ def home():
     budget = current_user.budget
 
     tips, insights = recommendationz()
-    # insights = insightz()
-    print(tips)
 
     # Actual energy
     hourly_consumptions_actual = average_energy_per_hour_all()
@@ -102,18 +100,33 @@ def profile():
     appliance = (Preference.query.filter_by(user_id=current_user.id, preference_name='Appliance Usage Time').first()).preference_value1
     sleepTime = (Preference.query.filter_by(user_id=current_user.id, preference_name='Sleep Time').first()).preference_value1
     occupancy = (Preference.query.filter_by(user_id=current_user.id, preference_name='Occupancy').first()).preference_value1
-    print(temp)
+    
     pform = PreferenceForm()
     if pform.validate_on_submit():
         # Get data from the form
         user_id = current_user.id  # Assuming you are using Flask-Login
-        temperature_preference = pform.temperature_preference.data
-        lighting_preference = pform.lighting_preference.data
-        tv_watchtime = pform.tv_watchtime.data
-        humidity_levels = pform.humidity_levels.data
-        appliance_preference = pform.appliance_preference.data
-        sleep_time = pform.sleep_time.data
-        occupancy_preference = pform.occupancy_preference.data
+        temperature_preference = pform.temperature_preference.data #tick
+        humidity_levels = pform.humidity_levels.data #tick
+
+        lighting_preference_from = pform.lighting_preference_from.data
+        lighting_preference_to = pform.lighting_preference_to.data
+        lighting_preference = f"{lighting_preference_from.strftime('%H:%M')}-{lighting_preference_to.strftime('%H:%M')}"
+        
+        tv_watchtime_from = pform.tv_watchtime_from.data
+        tv_watchtime_to = pform.tv_watchtime_to.data
+        tv_watchtime = f"{tv_watchtime_from.strftime('%H:%M')}-{tv_watchtime_to.strftime('%H:%M')}"
+        
+        appliance_preference_from = pform.appliance_preference_from.data
+        appliance_preference_to = pform.appliance_preference_to.data
+        appliance_preference = f"{appliance_preference_from.strftime('%H:%M')}-{appliance_preference_to.strftime('%H:%M')}"
+        
+        sleep_time_from = pform.sleep_time_from.data
+        sleep_time_to = pform.sleep_time_to.data
+        sleep_time = f"{sleep_time_from.strftime('%H:%M')}-{sleep_time_to.strftime('%H:%M')}"
+        
+        occupancy_preference_from = pform.occupancy_preference_from.data
+        occupancy_preference_to = pform.occupancy_preference_to.data
+        occupancy_preference = f"{occupancy_preference_from.strftime('%H:%M')}-{occupancy_preference_to.strftime('%H:%M')}"
         
         # Check if preferences already exist for the user
         existing_preferences = Preference.query.filter_by(user_id=user_id).all()
@@ -229,8 +242,6 @@ def recommendationz():
     consumption_ph_today = average_energy_per_hour(today_date)
     consumption_ph_yesterday = average_energy_per_hour(yesterday_date)
 
-    if (consumption_ph_yesterday - consumption_ph_today) <= 5: 
-        insights.append('Vola, you are keeping track of your consumption.')
     if (consumption_ph_today - consumption_ph_yesterday) > 5: 
         insights.append('Be careful!!!, you are consuming more than yesterday.')
     else:
