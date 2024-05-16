@@ -77,7 +77,7 @@ def home():
     latest_hour_predict, latest_cost_predict = cumulative_hourly_expenses_predict[-1]
 
 
-    month_predict = round(average_energy_last_30(), 2)
+    month_predict = round(avgs(), 2)
     currentMonth_expense = round(latest_cost_actual, 2)
     savings = round((budget - currentMonth_expense), 2)
     expense_form = changeExpenseBudget()
@@ -181,6 +181,37 @@ def average_energy_last_30():
 
     return predict_this_month
 
+def total_perhour_consumptions_last_30_days():
+    total_perhour_consumptions = []
+    for i in range(30):
+        target_date = (datetime.now() - timedelta(days=i)).strftime('%Y-%m-%d')
+        hourly_consumptions = db.session.query(
+            func.strftime('%Y-%m-%d %H:00:00', Stats.date).label('hour_truncated'),
+            func.avg(Stats.energy_prediction).label('average_energy')
+        ).filter(
+            func.date(Stats.date) == target_date
+        ).group_by(
+            func.strftime('%Y-%m-%d %H:00:00', Stats.date)
+        ).all()
+        
+        total_consumption = overall_power_consumption(hourly_consumptions)
+        total_perhour_consumptions.append(total_consumption)
+    
+    return total_perhour_consumptions
+
+def avgs():
+    totalperhour_consumptions_per_day = total_perhour_consumptions_last_30_days()
+    if totalperhour_consumptions_per_day:
+        average_energy_last_30 = sum(totalperhour_consumptions_per_day)/len(totalperhour_consumptions_per_day)
+    else:
+        average_energy_last_30 = 0
+    
+    predict_this_Month = average_energy_last_30 * 30 * cost_per_watt_hour
+
+    return predict_this_Month
+
+
+
 # Actual
 def average_energy_per_hour_all():
     hourly_consumptions = db.session.query(
@@ -225,6 +256,7 @@ def average_energy_per_hour(target_date):
     
     average_eph = overall_power_consumption(hourly_consumptions)
     return average_eph
+
 
 def overall_power_consumption(hourly_consumptions):
     total_consumption = sum(consumption for hour, consumption in hourly_consumptions)
