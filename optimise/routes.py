@@ -29,8 +29,9 @@ def receive_data():
     else:
         abort(403, 'Unauthorized device')  # Or handle unauthorized device appropriately
 
-    light_detected = bool(data.get('light_value'))
-    motion_detected = bool(data.get('motion_value'))
+    light_detected = bool(data.get('light'))
+    motion_detected = bool(data.get('motion'))
+    print("light:", light_detected, " motion:", motion_detected, " energy:", round(data.get("energy"), 9))
 
     try:
         converted_datetime = datetime.fromisoformat(data['date'])
@@ -312,7 +313,7 @@ def recommendationz():
 
         stat = db.session.query(db.func.count()).filter(
             Stats.user_id == current_user.id,
-            Stats.energy >= 12,
+            Stats.energy * 1000 >= 3, # 2 gives, 3 aint giving
             Stats.motion == False,
             (
                 (
@@ -340,7 +341,7 @@ def recommendationz():
 
         sum_of_statsL = db.session.query(db.func.count()).filter(
             Stats.user_id == current_user.id,
-            Stats.light == True,
+            Stats.light == True, 
             Stats.motion == False,
             (
                 (
@@ -355,7 +356,7 @@ def recommendationz():
 
         if sum_of_statsL > 10:
             tips.append("Television is stays on beyond set watch time. Set a TV sleep time")
-            insights.append("TV was on for almost 4 hours.")
+            insights.append("TV was on for almost hour.")
 
     # Sleeptime
     preference_sleep = Preference.query.filter_by(user_id=current_user.id, preference_name='Sleep Time').first()
@@ -445,7 +446,7 @@ def recommendationz():
         # Check if current time is within the daytime range
         if daytime_start <= current_time <= daytime_end:
             # print("It's daytime!")
-            if temp - average_temperature_time_ago > 3:
+            if temp - average_temperature_time_ago < 3:
                 tips.append(f'You may use Natural ventilation between {daytime_start} and {daytime_end} hours')
         
         # <li>Switch off your bathroom light</li>
@@ -522,8 +523,8 @@ def get_energy_data():
 
     # Extract timestamps and energy values
     timestamps = [stat.date.strftime("%a %H:%M:%S") for stat in stats]
-    energy_values = [stat.energy for stat in stats]
-    predicted_energy_values = [stat.energy_prediction for stat in stats]
+    energy_values = [stat.energy * 1000 for stat in stats]
+    predicted_energy_values = [stat.energy_prediction * 1000 for stat in stats]
 
     # Prepare data to send back to the client
     data = {
