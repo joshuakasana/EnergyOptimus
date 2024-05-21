@@ -36,7 +36,8 @@ function updatePlots() {
                 range: [Math.max(0, timestamps.length - 19), Math.max(40, timestamps.length)]
             },
             yaxis: { 
-                title: 'Energy Consumption'
+                title: 'Energy Consumption',
+                renge:[5,10]
             },
             showlegend: true
         };

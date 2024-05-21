@@ -31,7 +31,8 @@ def receive_data():
 
     light_detected = bool(data.get('light'))
     motion_detected = bool(data.get('motion'))
-    print("light:", light_detected, " motion:", motion_detected, " energy:", round(data.get("energy"), 9))
+    print("light:", light_detected, " motion:", motion_detected, " energy:", round(data.get("energy"), 9),
+          "energy_predict: ", round(data.get('energy_prediction'), 9))
 
     try:
         converted_datetime = datetime.fromisoformat(data['date'])
@@ -206,6 +207,9 @@ def avgs():
         average_energy_last_30 = sum(totalperhour_consumptions_per_day)/len(totalperhour_consumptions_per_day)
     else:
         average_energy_last_30 = 0
+
+    if average_energy_last_30 is not None and average_energy_last_30 < 5:
+        average_energy_last_30 = 6
     
     predict_this_Month = average_energy_last_30 * 30 * cost_per_watt_hour
 
@@ -278,7 +282,7 @@ def recommendationz():
     if (consumption_ph_today - consumption_ph_yesterday) > 5: 
         insights.append('Be careful!!!, you are consuming more than yesterday.')
     else:
-        insights.append('Vola, you are keeping track of your consumption.')
+        insights.append('Great job, Vola! You are successfully tracking your energy consumption')
 
 
     # Occupancy
@@ -308,8 +312,8 @@ def recommendationz():
         ).scalar()
 
         if sum_of_statsL > 3:
-            tips.append("Turn off the lights when away")
-            insights.append("Lights stay on when away")
+            tips.append("Turn off lights when you're not in the room to save energy.")
+            insights.append("Alert: Lights are on, but no one is in the room. Please turn them off to save energy.")
 
         stat = db.session.query(db.func.count()).filter(
             Stats.user_id == current_user.id,
@@ -327,7 +331,9 @@ def recommendationz():
         ).scalar()
         
         if stat > 4:
-            tips.append("Appliances should be turned off when away")
+            insights.append("Warning: Unusual energy usage detected. Check if any appliances are running unnecessarily.")
+            tips.append("Ensure all appliances are turned off when you're not at home.")
+            
 
     # tv Watchtime
     preference_tvwatchtime = Preference.query.filter_by(user_id=current_user.id, preference_name='TV Watchtime').first()
@@ -355,8 +361,8 @@ def recommendationz():
         ).scalar()
 
         if sum_of_statsL > 10:
-            tips.append("Television is stays on beyond set watch time. Set a TV sleep time")
-            insights.append("TV was on for almost hour.")
+            insights.append("Reminder: The television has been on longer than the allowed watch time. Consider turning it off.")
+            tips.append("Set a sleep timer on your TV or adjust your viewing preferences to reduce energy use.")
 
     # Sleeptime
     preference_sleep = Preference.query.filter_by(user_id=current_user.id, preference_name='Sleep Time').first()
@@ -389,7 +395,7 @@ def recommendationz():
         ).scalar()
 
         if sum_of_lightChecks > 5:
-            tips.append("Lights are unnecessarily ON during sleep hours")
+            tips.append("Turn off lights during sleep hours to avoid wasting electricity.")
 
         # Check late night activity
         sum_of_statsLM = db.session.query(db.func.count()).filter(
@@ -413,7 +419,7 @@ def recommendationz():
         ).scalar()
 
         if sum_of_statsLM > 5:
-            tips.append("Late night activity during sleeping hours highten power consumption")
+            tips.append("Reduce late-night activity to lower power consumption during sleep hours.")
     
     # Temperature
     preference_temperature = Preference.query.filter_by(user_id=current_user.id, preference_name='Temperature').first()
@@ -434,7 +440,7 @@ def recommendationz():
         if average_temperature_time_ago is None:
             average_temperature_time_ago = 0 #stat.temperature
         if abs(average_temperature_time_ago - temp) > 3:
-            tips.append("Schedule your AC")
+            tips.append("Set a schedule for your AC to optimize cooling and save energy.")
 
         # Get the current time
         current_time = datetime.now().time()
@@ -447,7 +453,7 @@ def recommendationz():
         if daytime_start <= current_time <= daytime_end:
             # print("It's daytime!")
             if temp - average_temperature_time_ago < 3:
-                tips.append(f'You may use Natural ventilation between {daytime_start} and {daytime_end} hours')
+                tips.append(f'Utilize natural ventilation between {daytime_start.strftime("%I:%M %p")} and {daytime_end.strftime("%I:%M %p")} to reduce AC usage and save energy.')
         
         # <li>Switch off your bathroom light</li>
         # <li>TV was on for almost 4 hours <br> <span class="text-muted">Set a TV sleep time</span></li>
