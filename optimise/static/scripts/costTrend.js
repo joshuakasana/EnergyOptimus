@@ -33,7 +33,7 @@ function updatePlots() {
         let target_expense_trace = {
             x: timestamps,
             y: target_expense_values,
-            mode: 'lines+markers',
+            mode: 'lines',
             name: 'Target Expense'
         };
 
