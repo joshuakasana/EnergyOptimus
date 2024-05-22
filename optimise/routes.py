@@ -18,7 +18,7 @@ def receive_data():
     for field in required_fields:
         if field not in data:
             abort(400, f'Missing required field: {field}')
-
+    #
     # Process and store the received data
             
     device_id = data.get('device_id')
